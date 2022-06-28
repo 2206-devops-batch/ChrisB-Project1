@@ -29,7 +29,7 @@ Here are some tips:
 
 ## Contributions
 
-See [`contributing.md`][contributing-guide] on how to contribute.
+See [`Contributing.md`][contributing-guide] on how to contribute.
 
 ## License
 
@@ -54,18 +54,15 @@ See [`contributing.md`][contributing-guide] on how to contribute.
 [.github]: [curr-branch]/.github
 
 [license]: [.github]/LICENSE
-[support-docs]: [.github]/support.md
-[code-of-conduct]: [.github]/code-of-conduct.md
-[contributing-guide]: [.github]/contributing.md
+[support-docs]: [.github]/Support.md
+[code-of-conduct]: [.github]/Code-of-conduct.md
+[contributing-guide]: [.github]/Contributing.md
+
+<!-- [pr]: .github/pull-request-template.md -->
+<!-- [ideas]: https://github.com/YOUR-ORGANIZATION/ideas -->
+
+<!-- [issue]: .github/ISSUE_TEMPLATE -->
 
 [issues]: https://github.com/type=Issues&search?q=user%3AYOUR-ORGANIZATION
-
-<!-- Test/List All Definitions/Links -->
-<!--
-[author] & [repo] & [curr-branch]
-[discussions] & [issues]
-[support-docs] & [contributing-guide] & [code-of-conduct]
-[minimal, reproducible example]
--->
 
 <!-- Definitions/Links END -->

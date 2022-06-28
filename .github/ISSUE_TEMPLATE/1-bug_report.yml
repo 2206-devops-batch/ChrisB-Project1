@@ -109,26 +109,34 @@ body:
         - label: I agree to follow this project's Code of Conduct
           required: true
 
-
 # <!-- Definitions/Links -->
 
-[repo]: https://github.com/YOUR-ORGANIZATION/YOUR-REPO
-[curr-branch]: [repo]/blob/main
+# <!-- External Based -->
 
-[discussions]: [repo]/discussions
-[issues]: https://github.com/search?q=user%3AYOUR-ORGANIZATION&type=Issues
-
-[support-docs]: [curr-branch]/support.md
-[code-of-conduct]: [curr-branch]/code-of-conduct.md
-[contributing-guide]: [curr-branch]/contributing.md
-
+[cs]: https://codesandbox.io
+[rubberduck]: https://rubberduckdebugging.com
+[xy]: https://meta.stackexchange.com/questions/66377/what-is-the-xy-problem/66378#66378
 [minimal, reproducible example]: https://stackoverflow.com/help/minimal-reproducible-example
 
-# <!-- Test/List All Definitions/Links -->
-# <!--
-# [discussions] & [issues]
-# [support-docs] & [contributing-guide] & [code-of-conduct]
-# [minimal, reproducible example]
-# -->
+# <!-- Repo Based -->
+
+[author]: https://YOUR-Domain.com
+[repo]: https://github.com/YOUR-ORGANIZATION/YOUR-REPO
+
+[discussions]: [repo]/discussions
+[curr-branch]: [repo]/blob/main
+[.github]: [curr-branch]/.github
+
+[license]: [.github]/LICENSE
+[support-docs]: [.github]/Support.md
+[code-of-conduct]: [.github]/Code-of-conduct.md
+[contributing-guide]: [.github]/Contributing.md
+
+# <!-- [pr]: .github/pull-request-template.md -->
+# <!-- [ideas]: https://github.com/YOUR-ORGANIZATION/ideas -->
+
+# <!-- [issue]: .github/ISSUE_TEMPLATE -->
+
+[issues]: https://github.com/type=Issues&search?q=user%3AYOUR-ORGANIZATION
 
 # <!-- Definitions/Links END -->
