@@ -1,3 +1,14 @@
+# **Code-of-conduct (Code-of-conduct.md)** needs to be updated by the **`YOUR-ORGANIZATION`**
+
+<!--
+## Our Pledge
+## Our Standards
+## Our Responsibilities
+## Scope
+## Enforcement
+## Attribution
+
+-->
 
 <!-- Definitions/Links -->
 
