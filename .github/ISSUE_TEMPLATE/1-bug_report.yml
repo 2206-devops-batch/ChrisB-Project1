@@ -13,11 +13,11 @@ body:
     attributes:
       label: Initial checklist
       options:
-        - label: I read the [support docs](https://github.com/YOUR-ORGANIZATION/YOUR-REPO/blob/main/support.md)
+        - label: I read the [support-docs]
           required: true
-        - label: I read the [contributing guide](https://github.com/YOUR-ORGANIZATION/YOUR-REPO/blob/main/contributing.md)
+        - label: I read the [contributing-guide]
           required: true
-        - label: I searched [issues](https://github.com/search?q=user%3AYOUR-ORGANIZATION&type=Issues) and couldn’t find anything (or linked relevant results below)
+        - label: I searched [issues] and couldn’t find anything (or linked relevant results below)
           required: true
   - type: input
     id: contact
@@ -32,7 +32,7 @@ body:
     attributes:
       label: What happened?
       description: |
-        How did this happen? Please provide a [minimal, reproducible example](https://stackoverflow.com/help/minimal-reproducible-example).
+        How did this happen? Please provide a [minimal, reproducible example].
         **To Reproduce**
         Steps to reproduce the behavior:
           1. Go to '...'
@@ -89,7 +89,6 @@ body:
       label: What browsers are you seeing the problem on?
       multiple: true
       options:
-        - Pi Browser
         - Chrome
         - Firefox
         - Safari
@@ -104,8 +103,31 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      # - label: I agree to follow the [code of conduct](https://github.com/YOUR-ORGANIZATION/YOUR-REPO/blob/main/code-of-conduct.md)
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      # - label: I agree to follow the [code-of-conduct]
+      description: By submitting this issue, you agree to follow our [code-of-conduct]
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true
+
+
+# <!-- Definitions/Links -->
+
+[repo]: https://github.com/YOUR-ORGANIZATION/YOUR-REPO
+
+[discussions]: [repo]/discussions
+[issues]: https://github.com/search?q=user%3AYOUR-ORGANIZATION&type=Issues
+
+[support-docs]: [repo]/blob/main/support.md
+[code-of-conduct]: [repo]/blob/main/code-of-conduct.md
+[contributing-guide]: [repo]/blob/main/contributing.md
+
+[minimal, reproducible example]: https://stackoverflow.com/help/minimal-reproducible-example
+
+# <!-- Test/List All Definitions/Links -->
+# <!--
+# [discussions] & [issues]
+# [support-docs] & [contributing-guide] & [code-of-conduct]
+# [minimal, reproducible example]
+# -->
+
+# <!-- Definitions/Links END -->
