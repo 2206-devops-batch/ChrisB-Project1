@@ -25,14 +25,18 @@ pipeline {
             // }
             steps {
                 archiveArtifacts artifacts: "archiveArtifacts artifacts: '$WORKSPACE/*'", followSymlinks: false, onlyIfSuccessful: true
+                // Force Stop Docker & Clean The Workspace
                 sh "docker system prune -af"
+                // re-download everything
                 sh "docker build -t Project1 $WORKSPACE"
+                // Run flask docker container.
+                // sh "docker-compose -f $WORKSPACE/Docker-Compose.yaml up -d"
                 sh "docker-compose up -d"
             }
         }
         stage ('Discord') {
             steps{
-                discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: 'env.BUILD_URL', result: 'SUCCESS', scmWebUrl: '', thumbnail: '', title: 'Project1', webhookURL: 'https://discord.com/api/webhooks/993998749078655168/H83c2vvdFvmcGggkGKejXcGJBfyZqX8SEfNuxG1KzapDwjr7c9uIUzXxokX_rJUFO8-D'
+                discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: 'env.BUILD_URL', result: 'SUCCESS', scmWebUrl: '', thumbnail: '', title: 'Project1', webhookURL: 'https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q'
             }
         }
     }
