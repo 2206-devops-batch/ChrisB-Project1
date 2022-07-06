@@ -12,12 +12,12 @@ pipeline {
                 sh 'python3 install -U pip && pip install -r requirements.txt'
             }
         }
-        stage('Test'){
-            steps {
-                // Run pytest
-                sh 'python3 -m pytest app_test.py'
-            }
-        }
+        // stage('Test'){
+        //     steps {
+        //         // Run pytest
+        //         sh 'python3 -m pytest app_test.py'
+        //     }
+        // }
         stage ('Deploy') {
             // steps{
             //     sh 'cd ChirsB-Project1 && git pull'
