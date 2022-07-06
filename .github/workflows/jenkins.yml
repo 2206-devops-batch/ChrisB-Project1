@@ -9,8 +9,8 @@ on:
   pull_request:
     branches: ["Jenkins"]
 
-permissions:
-  contents: read
+# permissions:
+#   contents: read
 
 jobs:
   build:
@@ -26,12 +26,46 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      # - name: Lint with flake8
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with pytest
+        run: |
+          pytest app_test.py
+
+      # only run on pytest success
+      - name: deploy to jenkins on success
+        uses: appleboy/jenkins-action@master
+        with:
+          url: "http://3.80.127.154:8080"
+          user: "Chris"
+          token: ${{ secrets.JENKINS_TOKEN }}
+          job: "Project1"
+          job: "discord test"
+
+      # - name: Notify Discord Channel
+      #   if: ${{ failure() }}
       #   run: |
-      #     # stop the build if there are Python syntax errors or undefined names
-      #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-      #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-      #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      # - name: Test with pytest
+      #     discordSend description: 'Fail', enableArtifactsList: true, footer: '', image: '', link: 'env.BUILD_URL', result: 'SUCCESS', scmWebUrl: '', thumbnail: '', title: 'Project1', webhookURL: 'https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q'
+
+      # show github data
+      # - name: show github options
+      #   if: ${{ always() }}
       #   run: |
-      #     pytest app_test.py
+      #    echo "${{ toJson(github) }}"
+
+      # only run if failure
+      - name: Create Github Issue From pytest failure
+        if: ${{ failure() }}
+        run: |
+          curl --request POST \
+                --url https://api.github.com/repos/${{ github.repository }}/issues \
+                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                --header 'content-type: application/json' \
+                --data '{
+                  "title": "Issue created due to workflow failure: ${{ github.run_id }}",
+                  "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n Issue number has been created: _${{ github.run_id }}_. \n\n GitHub commit id: **${{ github.sha }}** "
+                  }'
