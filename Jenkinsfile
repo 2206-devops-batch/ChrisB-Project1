@@ -15,7 +15,7 @@ pipeline {
         stage('Test'){
             steps {
                 // Run pytest
-                sh 'python3 -m pytest app-test.py'
+                sh 'python3 -m pytest app_test.py'
             }
         }
         stage ('Deploy') {
