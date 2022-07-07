@@ -16,7 +16,7 @@ pipeline {
           sh 'python3 -m venv .venv'
           sh '. .venv/bin/activate'
           // Install Dependencies
-          sh 'pip3 install -r requirements-dev.txt'
+          sh 'pip install -r requirements-dev.txt'
         }
       }
       stage('Test') {
