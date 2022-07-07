@@ -11,12 +11,12 @@ pipeline {
       stage('Install Environment') {
         steps {
           // Get some code from a GitHub repository
-          git 'https://github.com/2206-devops-batch/ChrisB-Project1'
+          // git 'https://github.com/2206-devops-batch/ChrisB-Project1'
           // Run venv
-          // sh 'python3 -m venv .venv'
-          // sh '. .venv/bin/activate'
+          sh 'python3 -m venv .venv'
+          sh '. .venv/bin/activate'
           // Install Dependencies
-          // sh 'pip install -r requirements-dev.txt'
+          sh 'pip install -r requirements-dev.txt'
         }
       }
       // stage('Test') {
