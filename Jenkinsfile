@@ -10,6 +10,7 @@ pipeline {
     stages {
       stage('Install Environment') {
         steps {
+          echo 'Installing'
           // // Get some code from a GitHub repository
           // git 'https://github.com/2206-devops-batch/ChrisB-Project1'
           // // Run venv
