@@ -1,10 +1,9 @@
-version: '3.9'
+version: '3.8'
 
-webapp:
-  container_name: webapp
-  image: Project1
-  build: .
-  ports:
-    - '5000:5000'
-  environment:
-    - FLASK_APP=app
+services:
+  website:
+    build: .
+    ports:
+      - '5000:5000'
+    environment:
+      - FLASK_APP=app
