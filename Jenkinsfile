@@ -1,8 +1,8 @@
 pipeline {
     environment {
-        repo = "chrisbarnes2000/Project1"
-        registry = "https://registry.hub.docker.com/"
+        registry = "chrisbarnes2000/project1"
         registrycredential = 'docker-hub-login'
+        dockerimage = ''
     }
     agent any
     
@@ -44,16 +44,16 @@ pipeline {
             }
             steps {
                 echo "Deploying ... "
-//                 script {
-//                     // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
-//                     // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
-//                     dockerImage = docker.build(repo + ":${env.BUILD_ID}")
-//                     docker.withRegistry(registry, registryCredential) {
-//                         dockerImage.push()
-//                     }
-//                 }
-//                 sh "docker push"
-                sh "docker-compose push -f $WORKSPACE/Docker-Compose.yaml website"
+                script {
+                    // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+                    img = registry + ":${env.BUILD_ID}"
+                    // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
+                    dockerImage = docker.build("${img}")
+                    docker.withRegistry( 'https://registry.hub.docker.com ', registryCredential ) {
+                        // push image to registry
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }
