@@ -53,7 +53,7 @@ pipeline {
 //                     }
 //                 }
 //                 sh "docker push"
-                sh "docker-compose push website"
+                sh "docker-compose push website -f $WORKSPACE/Docker-Compose.yaml"
             }
         }
     }
