@@ -8,7 +8,7 @@ pipeline {
                 git --version
                 docker --version
                 docker-compose --version
-                python --version
+                python3 --version
                 pip --version
                 '''
             }
@@ -16,6 +16,12 @@ pipeline {
         stage('Start') {
             steps {
                 echo 'Starting ... '
+                // force stop docker and clean up
+                sh "docker system prune -af"
+                // re-download everything
+                sh "docker build -t flask1 $WORKSPACE"
+                // Run flask docker container.
+                sh "docker-compose -f $WORKSPACE/docker-compose.yaml up -d"
             }
         }
         stage('Finisehd') {
@@ -29,8 +35,8 @@ pipeline {
         always {
             discordSend webhookURL: 'https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q',
                         enableArtifactsList: false, scmWebUrl: '',
-                        title: 'Project1'+JOB_NAME, link: env.BUILD_URL,
-                        description: '',
+                        title: JOB_NAME, link: env.BUILD_URL,
+                        description: 'The Current Build was a currentBuild.currentResult',
                         image: '', thumbnail: '',
                         footer: 'Jenkins Pipeline Build',
                         result: currentBuild.currentResult
