@@ -21,23 +21,23 @@ pipeline {
                 // re-download everything
                 sh "docker build -t flask1 $WORKSPACE"
                 // Run flask docker container.
-                sh "docker-compose -f $WORKSPACE/docker-compose.yaml up -d"
+                sh "docker-compose -f $WORKSPACE/Docker-Compose.yaml up -d"
             }
         }
-        stage('Finisehd') {
-            steps {
-                echo 'Ending ... '
-            }
-        }
+//         stage('Finisehd') {
+//             steps {
+//                 echo 'Ending ... '
+//             }
+//         }
     }
     
     post {
         always {
             discordSend webhookURL: 'https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q',
                         enableArtifactsList: false, scmWebUrl: '',
+                        image: '', thumbnail: '',        
                         title: JOB_NAME, link: env.BUILD_URL,
-                        description: 'The Current Build was a currentBuild.currentResult',
-                        image: '', thumbnail: '',
+                        description: 'The Current Build was a ${currentBuild.currentResult}',
                         footer: 'Jenkins Pipeline Build',
                         result: currentBuild.currentResult
         }
