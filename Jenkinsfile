@@ -1,6 +1,6 @@
 pipeline {
     environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub-cred-raja')
+		DOCKERHUB_CREDENTIALS=credentials("Docker_Auth_ID")
 //         registry = "chrisbarnes2000/project1"
 //         registrycredential = 'docker-hub-login'
 //         dockerimage = ''
@@ -36,9 +36,8 @@ pipeline {
                 sh "docker-compose up --build -d -f $WORKSPACE/Docker-Compose.yaml"
                 echo "Please Visit --> $JENKINS_URL:5000"
                 
-                
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push chrisbarnes2000/project1:latest'
+		sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                sh "docker push chrisbarnes2000/project1:latest"
 //                 script {
 //                     // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
 //                     img = registry + ":${env.BUILD_ID}"
@@ -68,7 +67,7 @@ pipeline {
                         result: currentBuild.currentResult
             
             sh "docker-compose down"
-            sh 'docker logout'
+            sh "docker logout"
         }
 //         success {
 //             mail to: "Chris.Barnes.2000@me.com",
