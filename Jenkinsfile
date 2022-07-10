@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo "Starting ... "
                 sh "docker system prune -af"
-                sh "docker-compose up --build -d"
+                sh "docker-compose up --build -d -f $WORKSPACE/Docker-Compose.yaml"
                 echo "Please Visit --> JENKINS_URL:5000"
             }
         }
