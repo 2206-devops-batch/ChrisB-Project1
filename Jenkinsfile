@@ -79,6 +79,6 @@ pipeline {
 //             mail to: "Chris.Barnes.2000@me.com",
 //             subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Failed",
 //             body: "Please go to ${BUILD_URL} and verify the build"
-        }
+//         }
     }
 }
