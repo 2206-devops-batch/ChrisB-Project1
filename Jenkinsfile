@@ -34,6 +34,16 @@ pipeline {
                 sh "docker system prune -af"
                 sh "docker-compose up --build -d -f $WORKSPACE/Docker-Compose.yaml"
                 echo "Please Visit --> $JENKINS_URL:5000"
+                script {
+                    // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+                    img = registry + ":${env.BUILD_ID}"
+                    // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
+                    dockerImage = docker.build("${img}")
+                    docker.withRegistry( 'https://registry.hub.docker.com ', registryCredential ) {
+                        // push image to registry
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }
@@ -58,16 +68,6 @@ pipeline {
             mail to: "Chris.Barnes.2000@me.com",
             subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A Success",
             body: "Please go to ${BUILD_URL} and verify the build"
-            script {
-                // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
-                img = registry + ":${env.BUILD_ID}"
-                // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
-                dockerImage = docker.build("${img}")
-                docker.withRegistry( 'https://registry.hub.docker.com ', registryCredential ) {
-                    // push image to registry
-                    dockerImage.push()
-                }
-            }
         }
         failure {
             mail to: "Chris.Barnes.2000@me.com",
