@@ -2,6 +2,17 @@ pipeline {
     agent any
     
     stages {
+        stage('Verify Tools') {
+            steps {
+                sh '''
+                git --version
+                docker --version
+                docker-compose --version
+                python --version
+                pip --version
+                '''
+            }
+        }
         stage('Start') {
             steps {
                 echo 'Starting ... '
