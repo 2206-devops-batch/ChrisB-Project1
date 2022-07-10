@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        repo = "ChrisBarnes2000/Project1"
+        repo = "chrisbarnes2000/Project1"
         registry = "https://registry.hub.docker.com/"
         registrycredential = 'docker-hub-login'
     }
@@ -44,15 +44,16 @@ pipeline {
             }
             steps {
                 echo "Deploying ... "
+//                 script {
+//                     // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+//                     // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
+//                     dockerImage = docker.build(repo + ":${env.BUILD_ID}")
+//                     docker.withRegistry(registry, registryCredential) {
+//                         dockerImage.push()
+//                     }
+//                 }
 //                 sh "docker push"
-                script {
-                    // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
-                    // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
-                    dockerImage = docker.build(repo + ":${env.BUILD_ID}")
-                    docker.withRegistry(registry, registryCredential) {
-                        dockerImage.push()
-                    }
-                }
+                sh "docker-compose push website"
             }
         }
     }
@@ -67,7 +68,7 @@ pipeline {
                         enableArtifactsList: false, scmWebUrl: "",
                         image: "", thumbnail: "",        
                         title: JOB_NAME, link: env.BUILD_URL,
-                        description: "Please Visit --> JENKINS_URL:5000",
+                        description: "Please Visit --> ${JENKINS_URL}:5000",
                         footer: "Jenkins Pipeline Build was a ${currentBuild.currentResult}",
                         result: currentBuild.currentResult
         }
