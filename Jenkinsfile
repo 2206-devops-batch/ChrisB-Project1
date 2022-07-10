@@ -51,28 +51,21 @@ pipeline {
                         description: "Please Visit --> ${JENKINS_URL}:5000",
                         footer: "Jenkins Pipeline Build was a ${currentBuild.currentResult}",
                         result: currentBuild.currentResult
+            
+            sh "docker-compose down"
         }
         success {
             mail to: "Chris.Barnes.2000@me.com",
             subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A Success",
             body: "Please go to ${BUILD_URL} and verify the build"
-            
-             when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
-            steps {
-                echo "Deploying ... "
-                script {
-                    // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
-                    img = registry + ":${env.BUILD_ID}"
-                    // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
-                    dockerImage = docker.build("${img}")
-                    docker.withRegistry( 'https://registry.hub.docker.com ', registryCredential ) {
-                        // push image to registry
-                        dockerImage.push()
-                    }
+            script {
+                // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+                img = registry + ":${env.BUILD_ID}"
+                // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
+                dockerImage = docker.build("${img}")
+                docker.withRegistry( 'https://registry.hub.docker.com ', registryCredential ) {
+                    // push image to registry
+                    dockerImage.push()
                 }
             }
         }
