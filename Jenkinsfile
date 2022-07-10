@@ -1,8 +1,13 @@
 pipeline {
+//     environment {
+//         registry = "ChrisBarnes2000/Project1"
+//         registrycredential = 'docker-hub-login'
+//         dockerimage = ''
+//     }
     agent any
     
     stages {
-        stage('Verify Tools') {
+        stage("Verify Tools") {
             steps {
                 sh '''
                 git --version
@@ -13,41 +18,62 @@ pipeline {
                 '''
             }
         }
-        stage('Start') {
+        stage("Test") {
+            when {
+                expression {
+                    BRANCH_NAME == "test"
+                }
+            }
             steps {
-                echo 'Starting ... '
-                // force stop docker and clean up
-                sh "docker system prune -af"
-                // re-download everything
-                sh "docker build -t flask1 $WORKSPACE"
-                // Run flask docker container.
-                sh "docker-compose -f $WORKSPACE/Docker-Compose.yaml up -d"
+                sh "python3 -m pytest app-test.py"
             }
         }
-//         stage('Finisehd') {
-//             steps {
-//                 echo 'Ending ... '
-//             }
-//         }
+        stage("Start") {
+            steps {
+                echo "Starting ... "
+                sh "docker system prune -af"
+                sh "docker-compose up --build -d"
+                echo "Please Visit --> JENKINS_URL:5000"
+            }
+        }
+        stage("Push Image To Dockerhub") {
+            when {
+                expression {
+                    BRANCH_NAME == "main"
+                }
+            }
+            steps {
+                echo "Deploying ... "
+                sh "docker push"
+//                 script {
+//                   // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
+//                   // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
+//                   dockerImage = docker.build(registry + ":${env.BUILD_ID}")
+//                   docker.withRegistry( 'https://registry.hub.docker.com ', registryCredential ) {
+//                     dockerImage.push()
+//                   }
+//                 }
+            }
+        }
     }
     
     post {
         always {
-            discordSend webhookURL: 'https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q',
-                        enableArtifactsList: false, scmWebUrl: '',
-                        image: '', thumbnail: '',        
+            discordSend webhookURL: "https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q",
+                        enableArtifactsList: false, scmWebUrl: "",
+                        image: "", thumbnail: "",        
                         title: JOB_NAME, link: env.BUILD_URL,
-                        description: 'The Current Build was a ${currentBuild.currentResult}',
-                        footer: 'Jenkins Pipeline Build',
+                        description: "Please Visit --> JENKINS_URL:5000",
+                        footer: "Jenkins Pipeline Build was a ${currentBuild.currentResult}",
                         result: currentBuild.currentResult
         }
         success {
-            mail to: 'Chris.Barnes.2000@me.com',
+            mail to: "Chris.Barnes.2000@me.com",
             subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A Success",
             body: "Please go to ${BUILD_URL} and verify the build"
         }
         failure {
-            mail to: 'Chris.Barnes.2000@me.com',
+            mail to: "Chris.Barnes.2000@me.com",
             subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Failed",
             body: "Please go to ${BUILD_URL} and verify the build"
         }
