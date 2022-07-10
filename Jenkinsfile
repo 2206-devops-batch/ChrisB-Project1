@@ -44,7 +44,7 @@ pipeline {
             }
             steps {
                 echo "Deploying ... "
-                sh "docker push"
+//                 sh "docker push"
                 script {
                     // reference: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
                     // reference: https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow
@@ -59,9 +59,9 @@ pipeline {
     
     post {
         always {
-            emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+//             emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n",
+//                 recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+//                 subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
             
             discordSend webhookURL: "https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q",
                         enableArtifactsList: false, scmWebUrl: "",
