@@ -5,11 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return (
-        "<h1>Welcome To Your Spy Journal!</h1>"
-        "For more details, please visit: <a href="https://github.com/2206-devops-batch/ChrisB-Project0">https://github.com/2206-devops-batch/ChrisB-Project0</a>"
-    )
-
+    return "<h1>Welcome To Your Spy Journal!</h1>"
 
 @app.route("/audio/")
 def audio():
