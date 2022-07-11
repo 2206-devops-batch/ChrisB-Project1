@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = "chrisbarnes2000/project1"
+    registrycredential = 'DOCKER_AUTH_ID'
+    dockerimage = ''
+  } // environment
   agent any
   stages {
     stage("Start Web Server") {
@@ -13,18 +18,16 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          def customImage = docker.build("chrisbarnes2000/project1:${BUILD_NUMBER}")
-          customImage.push()
-//           docker.withRegistry( '', registryCredential ) {
-//             customImage.push()
-//           }
+          def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          } // withRegistry
         } // script
       } // steps
     } // deploy
     stage('Remove Unused Images') {
       steps{
-        sh "docker rmi chrisbarnes2000/project1:${BUILD_NUMBER}"
-//         sh "docker rmi ${JOB_NAME}:${BUILD_NUMBER}"
+        sh "docker rmi ${registry}:${BUILD_NUMBER}"
       } // steps
     } // Remove
   } // stages
