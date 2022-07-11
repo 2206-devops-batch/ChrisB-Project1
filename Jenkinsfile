@@ -27,7 +27,9 @@ pipeline {
                   result: currentBuild.currentResult
     } // always
     success {
-      docker push chrisbarnes2000/JOB_NAME:${BUILD_NUMBER}
+      steps {
+        docker push chrisbarnes2000/JOB_NAME:${BUILD_NUMBER}
+      }
     } // success
   } // post
 } // pipeline
