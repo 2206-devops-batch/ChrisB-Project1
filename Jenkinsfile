@@ -3,7 +3,6 @@ pipeline {
   stages {
     stage("Test") {
       steps {
-        echo "testing..."
         sh "whoami"
       }
     }
