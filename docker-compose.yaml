@@ -1,8 +1,9 @@
-version: '3.8'
+version: '3.9'
 
 services:
   website:
     build: .
+    image: chrisbarnes2000/project1
     ports:
       - '5000:5000'
     environment:
