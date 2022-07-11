@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = "chrisbarnes2000/project1"
+    registryCredential = 'DOCKER_AUTH_ID'
+    dockerImage = ''
+  }
   agent any
 
   stages {
@@ -31,25 +36,47 @@ pipeline {
         echo "Please Visit --> $BASE_URL:5000"
       }
     }
-    stage("Build & Push Image To Docker Hub") {
-      steps {
+//     stage("Build & Push Image To Docker Hub") {
+//       steps {
+//         sh "docker login -u chrisbarnes2000"
 //         sh "docker-compose build --pull"
-        sh "docker-compose push"
-      } 
+//         sh "docker-compose push"
+//       } 
+//     }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
     }
   }
 
   post {
     always {
-      sh "docker-compose down"
-      sh "docker rmi chrisbarnes2000/project1:$BUILD_NUMBER"
-      sh "docker logout"
+//       sh "docker-compose down"
+//       sh "docker rmi chrisbarnes2000/project1:$BUILD_NUMBER"
+//       sh "docker logout"
 
       discordSend webhookURL: "https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q",
                   enableArtifactsList: false, scmWebUrl: "",
                   image: "", thumbnail: "",        
                   title: JOB_NAME, link: env.BUILD_URL,
-                  description: "Please Visit --> ${JENKINS_URL}:5000",
+                  description: "Please Visit --> ${BASE_URL}:50000",
                   footer: "Jenkins Pipeline Build was a ${currentBuild.currentResult}",
                   result: currentBuild.currentResult
     }
