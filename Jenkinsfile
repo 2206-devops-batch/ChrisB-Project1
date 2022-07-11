@@ -28,7 +28,7 @@ pipeline {
     } // always
     success {
       steps {
-        docker push chrisbarnes2000/JOB_NAME:${BUILD_NUMBER}
+        docker push
       }
     } // success
   } // post
