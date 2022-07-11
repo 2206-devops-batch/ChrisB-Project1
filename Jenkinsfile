@@ -33,7 +33,7 @@ pipeline {
     }
     stage("Build & Push Image To Docker Hub") {
       steps {
-        sh "docker-compose build --pull"
+//         sh "docker-compose build --pull"
         sh "docker-compose push"
       } 
     }
@@ -41,8 +41,8 @@ pipeline {
 
   post {
     always {
-      sh "docker rmi $chrisbarnes2000/project1:$BUILD_NUMBER"
       sh "docker-compose down"
+      sh "docker rmi chrisbarnes2000/project1:$BUILD_NUMBER"
       sh "docker logout"
 
       discordSend webhookURL: "https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q",
