@@ -1,32 +1,6 @@
 pipeline {
   agent any
   stages {
-    stage("Verify Tools") {
-      when {
-        expression {
-          BRANCH_NAME == "test"
-        }
-      }
-      steps {
-        sh '''
-          git --version
-          pip --version
-          docker --version
-          python3 --version
-          docker-compose --version
-        '''
-      }
-    }
-    stage("Test") {
-      when {
-        expression {
-          BRANCH_NAME == "test"
-        }
-      }
-      steps {
-        sh "python3 -m pytest app-test.py"
-      }
-    }
     stage("Start Web Server") {
       steps {
         echo "Starting ... "
