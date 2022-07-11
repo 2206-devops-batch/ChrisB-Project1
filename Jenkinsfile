@@ -1,9 +1,11 @@
 pipeline {
   agent any
   stages {
-    stage("Test") {
+    stage("Start") {
       steps {
-        sh "whoami"
+        echo "Starting ... "
+        sh "docker system prune -af"
+        sh "docker-compose up --build -d"
       }
     }
   }
