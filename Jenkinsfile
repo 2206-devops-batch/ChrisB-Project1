@@ -1,6 +1,27 @@
 pipeline {
   agent any
   stages {
+    stage("Verify Tools") {
+      steps {
+        sh '''
+          git --version
+          pip --version
+          docker --version
+          python3 --version
+          docker-compose --version
+        '''
+      }
+    }
+    stage("Test") {
+      when {
+        expression {
+          BRANCH_NAME == "test"
+        }
+      }
+      steps {
+        sh "python3 -m pytest app-test.py"
+      }
+    }
     stage("Start Web Server") {
       steps {
         echo "Starting ... "
@@ -10,6 +31,22 @@ pipeline {
         echo "Please Visit --> $BASE_URL:5000"
       } // steps
     } // start
+    stage('Deploy Image') {
+      steps{
+        script {
+          def customImage = docker.build("${JOB_NAME}:${BUILD_NUMBER}")
+          customImage.push()
+//           docker.withRegistry( '', registryCredential ) {
+//             customImage.push()
+//           }
+        } // script
+      } // steps
+    } // deploy
+    stage('Remove Unused Images') {
+      steps{
+        sh "docker rmi ${JOB_NAME}:${BUILD_NUMBER}"
+      } // steps
+    } // Remove
   } // stages
   post {
     always {
@@ -26,9 +63,5 @@ pipeline {
                   footer: "Jenkins Pipeline Build was a ${currentBuild.currentResult}",
                   result: currentBuild.currentResult
     } // always
-    success {
-      def customImage = docker.build("${JOB_NAME}:${BUILD_ID}")
-      customImage.push()
-    } // success
   } // post
 } // pipeline
