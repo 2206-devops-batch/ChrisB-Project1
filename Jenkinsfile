@@ -2,6 +2,11 @@ pipeline {
   agent any
   stages {
     stage("Verify Tools") {
+      when {
+        expression {
+          BRANCH_NAME == "test"
+        }
+      }
       steps {
         sh '''
           git --version
