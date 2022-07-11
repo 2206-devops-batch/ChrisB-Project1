@@ -27,9 +27,7 @@ pipeline {
                   result: currentBuild.currentResult
     } // always
     success {
-      steps {
-        docker push
-      }
+      docker push
     } // success
   } // post
 } // pipeline
