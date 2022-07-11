@@ -13,7 +13,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          def customImage = docker.build("${JOB_NAME}:${BUILD_NUMBER}")
+          def customImage = docker.build("chrisbarnes2000/project1:${BUILD_NUMBER}")
           customImage.push()
 //           docker.withRegistry( '', registryCredential ) {
 //             customImage.push()
@@ -23,7 +23,8 @@ pipeline {
     } // deploy
     stage('Remove Unused Images') {
       steps{
-        sh "docker rmi ${JOB_NAME}:${BUILD_NUMBER}"
+        sh "docker rmi chrisbarnes2000/project1:${BUILD_NUMBER}"
+//         sh "docker rmi ${JOB_NAME}:${BUILD_NUMBER}"
       } // steps
     } // Remove
   } // stages
