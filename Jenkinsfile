@@ -21,13 +21,14 @@ pipeline {
       discordSend webhookURL: "https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q",
                   enableArtifactsList: false, scmWebUrl: "",
                   image: "", thumbnail: "",        
-                  title: JOB_NAME, link: env.BUILD_URL,
+                  title: JOB_NAME, link: BUILD_URL,
                   description: "Please Visit --> ${BASE_URL}:50000",
                   footer: "Jenkins Pipeline Build was a ${currentBuild.currentResult}",
                   result: currentBuild.currentResult
     } // always
     success {
-      docker push
+      def customImage = docker.build("${JOB_NAME}:${BUILD_ID}")
+      customImage.push()
     } // success
   } // post
 } // pipeline
