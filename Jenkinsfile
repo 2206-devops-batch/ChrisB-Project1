@@ -19,7 +19,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          sh "docker push"
+          sh "docker push ${registry}:${BUILD_NUMBER}"
 
           // def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
           // docker.withRegistry( '', registryCredential ) {
