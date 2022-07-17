@@ -19,16 +19,24 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          } // withRegistry
+          sh "docker push"
+
+          // def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+          // docker.withRegistry( '', registryCredential ) {
+          //   dockerImage.push()
+          // } // withRegistry
         } // script
       } // steps
     } // deploy
     stage('Remove Unused Images') {
       steps{
-        sh "docker rmi ${registry}:${BUILD_NUMBER}"
+        sh """
+          docker kill ${docker ps -q}
+          docker rm ${docker ps -a -q}
+          docker rmi ${docker images -q}
+          docker rmi ${registry}:${BUILD_NUMBER}
+          docker system prune -af
+        """
       } // steps
     } // Remove
   } // stages
