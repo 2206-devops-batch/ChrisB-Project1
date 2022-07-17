@@ -3,6 +3,7 @@ pipeline {
     registry = "chrisbarnes2000/project1"
     registrycredential = 'DOCKER_AUTH_ID'
     dockerimage = ''
+    DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
   } // environment
   agent any
   stages {
@@ -19,8 +20,12 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
-          dockerImage.push()
+          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+          sh 'docker push  ${registry}:${BUILD_NUMBER}'
+
+
+          // def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+          // dockerImage.push()
           // sh "docker push ${registry}:${BUILD_NUMBER}"
 
           // docker.withRegistry( '', registryCredential ) {
@@ -42,6 +47,7 @@ pipeline {
   } // stages
   post {
     always {
+      sh 'docker system prune -af && docker logout'
 
       mail to: "Chris.Barnes.2000@me.com",
            subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A ${currentBuild.currentResult}",
