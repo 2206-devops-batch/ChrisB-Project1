@@ -1,5 +1,6 @@
 pipeline {
   environment {
+    DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
     registry = "chrisbarnes2000"
     container = "flask-container"
     image = "project-1"
@@ -21,6 +22,7 @@ pipeline {
 
     stage('Pull Latest Version From Docker Hub') {
         steps {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             sh "docker pull ${registry}/${image}:${version}"
         }
     }
