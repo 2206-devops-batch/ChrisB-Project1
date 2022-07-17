@@ -39,7 +39,7 @@ pipeline {
            subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A ${currentBuild.currentResult}",
            body: "Please go to ${BUILD_URL} and verify the build"
 
-      discordSend webhookURL: "https://discord.com/api/webhooks/994018555341307966/V-Or2AnFnDNpfHa7slRrl2S0rhdybzYSnDNzKHVHgnKxJHCWG8iXWVQAPNjsa8hvHJ_q",
+      discordSend webhookURL: "https://discord.com/api/webhooks/998320738769588224/4akFNyQItbFvUKmbGxJ-qMCyzMefF3QP4GbyNk73wry4_WfGPuDOWUlael_WN4_Yh677",
                   enableArtifactsList: false, scmWebUrl: "",
                   image: "", thumbnail: "",
                   title: JOB_NAME, link: BUILD_URL,
