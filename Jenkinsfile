@@ -1,9 +1,9 @@
 pipeline {
   environment {
-    registry = "chrisbarnes2000/project1"
-    registrycredential = 'DOCKER_AUTH_ID'
-    dockerimage = ''
-    DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
+    registry = "chrisbarnes2000"
+    container = "flask-container"
+    image = "project-1"
+    version = "latest"
   } // environment
   agent any
   stages {
@@ -17,22 +17,25 @@ pipeline {
         echo "Please Visit --> $BASE_URL:5000"
       } // steps
     } // start
-    stage('Deploy Image') {
-      steps{
-        script {
-          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          sh 'docker push  ${registry}:${BUILD_NUMBER}'
 
 
-          // def dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
-          // dockerImage.push()
-          // sh "docker push ${registry}:${BUILD_NUMBER}"
+    stage('Pull Latest Version From Docker Hub') {
+        steps {
+            sh "docker pull ${registry}/${image}:${version}"
+        }
+    }
 
-          // docker.withRegistry( '', registryCredential ) {
-          // } // withRegistry
-        } // script
-      } // steps
-    } // deploy
+
+    stage('Rebuild & Push To Docker Hub') {
+        steps {
+            script {
+                docker.build("${registry}/${image}:${BUILD_NUMBER}")
+            }
+            sh "docker push ${registry}/${image}:${BUILD_NUMBER}"
+        }
+    }
+
+
     stage('Remove Unused Images') {
       steps{
         sh """
