@@ -18,13 +18,13 @@ pipeline {
   stages {
     stage("Verify Devops-Setup") {
       steps {
-        sh """
+        sh '''
           docker version
           docker info
           docker-compose version
           curl --version
           jq --version
-        """
+        '''
         sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
       }
     }
@@ -79,13 +79,13 @@ pipeline {
 
     stage("Remove Unused Images") {
       steps{
-        sh """
+        sh '''
           docker kill ${docker ps -q}
           docker rm   ${docker ps -a -q}
           docker rmi  ${docker images -q}
           docker rmi  ${path_current_build}
           docker system prune -af
-        """
+        '''
       } // steps
     } // Remove
   } // stages
