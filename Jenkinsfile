@@ -32,7 +32,9 @@ pipeline {
     stage('Build'){
       steps {
         echo '\n\nBUILDING... \n'
-
+        sh "docker build -t flask-image ."
+        sh "docker run -d -p 5000:5000 --rm --name flask-container flask-image"
+        echo "Please Visit --> $BASE_URL:5000"
       }
     }
     stage('Test'){
