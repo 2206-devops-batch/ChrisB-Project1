@@ -10,6 +10,15 @@ pipeline {
   stages {
     stage('ENV CHECK'){
       steps{
+        // Check For Required Tools
+        sh '''
+          docker version
+          docker info
+          docker-compose version
+          curl --version
+          jq --version
+        '''
+
         // Login To Docker
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 
