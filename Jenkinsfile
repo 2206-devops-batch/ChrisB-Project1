@@ -35,7 +35,10 @@ pipeline {
       steps {
         echo '\n\nBUILDING... \n'
         sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
+
+        echo "\n\nStarting Web Server... \n"
         sh "docker run -d -p 5000:5000 --rm --name ${repo}-container ${DOCKERHUB_REPO}"
+
         echo "Please Visit --> $BASE_URL:5000"
       }
     }
@@ -58,6 +61,18 @@ pipeline {
         sh "docker pull ${DOCKERHUB_REPO}" //:${TAG}
       }
     }
+    stage("Run Smoke Tests Against The Container") {
+      steps {
+        echo '\n\nRE-BUILD LATEST FROM DOCKER HUB... \n'
+        sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
+
+        echo "\n\nStarting Web Server FOR SMOKE TESTS... \n"
+        sh "docker run -d -p 5000:5000 --rm --name ${repo}-container ${DOCKERHUB_REPO}"
+
+        echo "\nPlease Visit --> $BASE_URL:5000"
+        sh "curl http://localhost:5000/ | jq"
+      }
+    }
     stage('Deploy'){
       steps {
         echo '\n\nDEPLOYING... \n'
@@ -69,6 +84,7 @@ pipeline {
 
   post {
     always {
+      // Clean Everything UP -- Docker
       // sh 'docker-compose down --remove-orphans -v'
       sh 'docker kill $(docker ps -q)'
 
@@ -78,6 +94,7 @@ pipeline {
       // sh 'docker rmi $(path_current_build)'
       sh 'docker system prune -af && docker logout'
 
+      // Send Status Report To Email & Discord
       mail to: "Chris.Barnes.2000@me.com",
            subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A ${currentBuild.currentResult}",
            body: "Please go to ${BUILD_URL} and verify the build"
