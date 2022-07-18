@@ -32,8 +32,8 @@ pipeline {
     stage('Build'){
       steps {
         echo '\n\nBUILDING... \n'
-        sh "docker build -t flask-image ."
-        sh "docker run -d -p 5000:5000 --rm --name flask-container flask-image"
+        sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
+        sh "docker run -d -p 5000:5000 --rm --name ${DOCKERHUB_REPO}-container ${DOCKERHUB_REPO}"
         echo "Please Visit --> $BASE_URL:5000"
       }
     }
