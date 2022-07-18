@@ -18,13 +18,6 @@ pipeline {
   stages {
     stage("Verify Devops-Setup") {
       steps {
-        sh '''
-          docker version
-          docker info
-          docker-compose version
-          curl --version
-          jq --version
-        '''
         sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
       }
     }
