@@ -17,9 +17,9 @@ pipeline {
         sh 'docker kill $(docker ps -q)'
 
         // Clean The Docker ENV
-        sh 'docker rm   $(docker ps -a -q)'
-        sh 'docker rmi  $(docker images -q)'
-        // sh 'docker rmi  $(path_current_build)'
+        sh 'docker rm $(docker ps -a -q)'
+        sh 'docker rmi $(docker images -q)'
+        // sh 'docker rmi $(path_current_build)'
         sh 'docker system prune -af --volumes'
 
         // Check The ENV Is Clean
