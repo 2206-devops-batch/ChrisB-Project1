@@ -61,20 +61,20 @@ pipeline {
         sh "docker pull ${DOCKERHUB_REPO}" //:${TAG}
       }
     }
-    stage("Run Smoke Tests Against The Container") {
-      steps {
-        sh 'docker kill $(docker ps -q)'
+    // stage("Run Smoke Tests Against The Container") {
+    //   steps {
+    //     sh 'docker kill $(docker ps -q)'
 
-        echo '\n\nRE-BUILD LATEST FROM DOCKER HUB... \n'
-        sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
+    //     echo '\n\nRE-BUILD LATEST FROM DOCKER HUB... \n'
+    //     sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
 
-        echo "\n\nStarting Web Server FOR SMOKE TESTS... \n"
-        sh "docker run -d -p 5000:5000 --rm --name ${repo}-container ${DOCKERHUB_REPO}"
+    //     echo "\n\nStarting Web Server FOR SMOKE TESTS... \n"
+    //     sh "docker run -d -p 5000:5000 --rm --name ${repo}-container ${DOCKERHUB_REPO}"
 
-        echo "\nPlease Visit --> $BASE_URL:5000"
-        sh "curl ${BASE_URL}:5000 | jq"
-      }
-    }
+    //     echo "\nPlease Visit --> $BASE_URL:5000"
+    //     sh "curl ${BASE_URL}:5000 | jq"
+    //   }
+    // }
     stage('Deploy'){
       steps {
         echo '\n\nDEPLOYING... \n'
@@ -88,7 +88,7 @@ pipeline {
     always {
       // Clean Everything UP -- Docker
       // sh 'docker-compose down --remove-orphans -v'
-      sh 'docker kill $(docker ps -q)'
+      // sh 'docker kill $(docker ps -q)'
 
       // Clean The Docker ENV
       sh 'docker rm $(docker ps -a -q)'
