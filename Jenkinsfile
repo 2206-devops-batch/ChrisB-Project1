@@ -63,6 +63,8 @@ pipeline {
     }
     stage("Run Smoke Tests Against The Container") {
       steps {
+        sh 'docker kill $(docker ps -q)'
+        
         echo '\n\nRE-BUILD LATEST FROM DOCKER HUB... \n'
         sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
 
