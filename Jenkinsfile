@@ -70,29 +70,11 @@ pipeline {
     }
 
 
-    stage("Remove Unused Images") {
-      steps{
-        sh '''
-          docker kill ${docker ps -q}
-          docker rm   ${docker ps -a -q}
-          docker rmi  ${docker images -q}
-          docker rmi  ${path_current_build}
-          docker system prune -af
-        '''
-      } // steps
-    } // Remove
   } // stages
-
-
 
   post {
     always {
       // Clean up docker / Everything
-      // sh "docker kill ${container}"
-      // sh 'docker-compose down --remove-orphans -v'
-      // sh "docker system prune -af --volumes"
-      // sh 'docker-compose ps'
-      // sh 'docker ps -a'
       sh "docker system prune -af && docker logout"
 
 
