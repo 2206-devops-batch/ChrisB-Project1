@@ -13,13 +13,6 @@ pipeline {
         // Login To Docker
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 
-        // sh 'docker-compose down --remove-orphans -v'
-        sh 'docker kill $(docker ps -q)'
-
-        // Clean The Docker ENV
-        sh 'docker rm $(docker ps -a -q)'
-        sh 'docker rmi $(docker images -q)'
-        // sh 'docker rmi $(path_current_build)'
         sh 'docker system prune -af --volumes'
 
         // Check The ENV Is Clean
@@ -62,6 +55,13 @@ pipeline {
 
   post {
     always {
+      // sh 'docker-compose down --remove-orphans -v'
+      sh 'docker kill $(docker ps -q)'
+
+      // Clean The Docker ENV
+      sh 'docker rm $(docker ps -a -q)'
+      sh 'docker rmi $(docker images -q)'
+      // sh 'docker rmi $(path_current_build)'
       sh 'docker system prune -af && docker logout'
 
       mail to: "Chris.Barnes.2000@me.com",
