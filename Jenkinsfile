@@ -1,7 +1,9 @@
 pipeline {
   environment {
+    registry='chrisbarnes2000'
+    repo='project-1'
     DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
-    DOCKERHUB_REPO='chrisbarnes2000/project-1'
+    DOCKERHUB_REPO='${registry}/${repo}'
     TAG="${BUILD_NUMBER}" // 'latest'
   } // environment
 
@@ -33,7 +35,7 @@ pipeline {
       steps {
         echo '\n\nBUILDING... \n'
         sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
-        sh "docker run -d -p 5000:5000 --rm --name ${DOCKERHUB_REPO}-container ${DOCKERHUB_REPO}"
+        sh "docker run -d -p 5000:5000 --rm --name ${repo}-container ${DOCKERHUB_REPO}"
         echo "Please Visit --> $BASE_URL:5000"
       }
     }
