@@ -99,7 +99,7 @@ pipeline {
       // sh 'docker-compose down --remove-orphans -v'
       // sh "docker system prune -af --volumes"
       // sh 'docker-compose ps'
-      // sh 'docker ps -A'
+      // sh 'docker ps -a'
       sh "docker system prune -af && docker logout"
 
 
