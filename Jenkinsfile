@@ -64,7 +64,7 @@ pipeline {
     stage("Run Smoke Tests Against The Container") {
       steps {
         sh 'docker kill $(docker ps -q)'
-        
+
         echo '\n\nRE-BUILD LATEST FROM DOCKER HUB... \n'
         sh "docker build -t ${DOCKERHUB_REPO} ." //:${TAG}
 
@@ -72,7 +72,7 @@ pipeline {
         sh "docker run -d -p 5000:5000 --rm --name ${repo}-container ${DOCKERHUB_REPO}"
 
         echo "\nPlease Visit --> $BASE_URL:5000"
-        sh "curl http://localhost:5000/ | jq"
+        sh "curl ${BASE_URL}:5000 | jq"
       }
     }
     stage('Deploy'){
