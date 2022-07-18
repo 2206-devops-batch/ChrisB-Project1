@@ -11,7 +11,6 @@ pipeline {
     stage("Start Web Server") {
       steps {
         echo "Starting ... "
-        sh "docker kill flask-container"
         sh "docker system prune -af"
         sh "docker build -t flask-image ."
         sh "docker run -d -p 5000:5000 --rm --name flask-container flask-image"
