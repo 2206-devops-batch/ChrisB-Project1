@@ -1,54 +1,51 @@
 pipeline {
   environment {
     DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
-    registry = "chrisbarnes2000"
-    container = "flask-container"
-    image = "project-1"
-    version = "latest"
+    DOCKERHUB_REPO='chrisbarnes2000/project-1'
+    TAG=${BUILD_NUMBER} // 'latest'
   } // environment
+
   agent any
+
   stages {
-    stage("Start Web Server") {
-      steps {
-        echo "Starting ... "
-        sh "docker system prune -af"
-        sh "docker build -t flask-image ."
-        sh "docker run -d -p 5000:5000 --rm --name flask-container flask-image"
-        echo "Please Visit --> $BASE_URL:5000"
-      } // steps
-    } // start
-
-
-    stage('Pull Latest Version From Docker Hub') {
-        steps {
-            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            sh "docker pull ${registry}/${image}:${version}"
-        }
-    }
-
-
-    stage('Rebuild & Push To Docker Hub') {
-        steps {
-            script {
-                docker.build("${registry}/${image}:${BUILD_NUMBER}")
-            }
-            sh "docker push ${registry}/${image}:${BUILD_NUMBER}"
-        }
-    }
-
-
-    stage('Remove Unused Images') {
+    stage('ENV CHECK'){
       steps{
-        sh """
-          docker kill ${docker ps -q}
-          docker rm ${docker ps -a -q}
-          docker rmi ${docker images -q}
-          docker rmi ${registry}:${BUILD_NUMBER}
-          docker system prune -af
-        """
-      } // steps
-    } // Remove
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+      }
+    }
+    stage('Build'){
+      steps {
+        echo '\n\nBUILDING... \n'
+
+      }
+    }
+    stage('Test'){
+      steps {
+        echo '\n\nTESTING... \n'
+
+      }
+    }
+    stage('Push'){
+      steps {
+        echo '\n\nPUSHING... \n'
+
+      }
+    }
+    stage('Pull'){
+      steps {
+        echo '\n\nPULLING... \n'
+
+      }
+    }
+    stage('Deploy'){
+      steps {
+        echo '\n\nDEPLOYING... \n'
+
+      }
+    }
   } // stages
+
+
   post {
     always {
       sh 'docker system prune -af && docker logout'
