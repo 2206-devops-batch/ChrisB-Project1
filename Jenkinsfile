@@ -38,7 +38,7 @@ pipeline {
     stage('Test'){
       steps {
         echo '\n\nTESTING... \n'
-
+        sh "pytest app-test.py"
       }
     }
     stage('Push'){
