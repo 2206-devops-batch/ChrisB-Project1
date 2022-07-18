@@ -1,86 +1,61 @@
 pipeline {
   environment {
-    DOCKERHUB_CREDENTIALS=credentials("DOCKER_AUTH_ID")
+    DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
     registry = "chrisbarnes2000"
-    repository = "project-1"
-
     container = "flask-container"
+    image = "project-1"
     version = "latest"
-
-    path = "${registry}/${repository}"
-    path_current_build = "${path}:${BUILD_NUMBER}"
   } // environment
-
-
   agent any
-
-
   stages {
-    stage("Verify Devops-Setup") {
-      steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-      }
-    }
-
-
-    stage("Prune Docker Data") {
-      steps {
-        sh "docker kill ${container}"
-        sh "docker system prune -af --volumes"
-      }
-    }
-
-
-    stage("Pytest Latest Changes (for NEW - Green Deployment)") {
-      steps {
-        sh "pytest app-test.py"
-      }
-    }
-
-
-    stage("Rebuild & Push To Docker Hub") {
-      steps {
-        sh "docker build -t ${path_current_build} ." // chrisbarnes2000/project-1:35
-        sh "docker push ${path_current_build}"
-      }
-    }
-
-
     stage("Start Web Server") {
       steps {
-        echo "\n\nStarting Web Server... \n"
-        sh "docker run -d -p 5000:5000 --rm --name ${container} ${path_current_build}"
+        echo "Starting ... "
+        sh "docker kill flask-container"
+        sh "docker system prune -af"
+        sh "docker build -t flask-image ."
+        sh "docker run -d -p 5000:5000 --rm --name flask-container flask-image"
         echo "Please Visit --> $BASE_URL:5000"
       } // steps
     } // start
 
 
-    stage("Pull Latest Version From Docker Hub") {
-      steps {
-        sh "docker pull ${path_current_build}" // chrisbarnes2000/project-1:latest
-      }
+    stage('Pull Latest Version From Docker Hub') {
+        steps {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            sh "docker pull ${registry}/${image}:${version}"
+        }
     }
 
 
-    stage("Run Smoke Tests Against The Container") {
-      steps {
-        echo "Please Visit --> $BASE_URL:5000"
-        sh "curl http://localhost:5000/ | jq"
-      }
+    stage('Rebuild & Push To Docker Hub') {
+        steps {
+            script {
+                docker.build("${registry}/${image}:${BUILD_NUMBER}")
+            }
+            sh "docker push ${registry}/${image}:${BUILD_NUMBER}"
+        }
     }
 
 
+    stage('Remove Unused Images') {
+      steps{
+        sh """
+          docker kill ${docker ps -q}
+          docker rm ${docker ps -a -q}
+          docker rmi ${docker images -q}
+          docker rmi ${registry}:${BUILD_NUMBER}
+          docker system prune -af
+        """
+      } // steps
+    } // Remove
   } // stages
-
   post {
     always {
-      // Clean up docker / Everything
-      sh "docker system prune -af && docker logout"
+      sh 'docker system prune -af && docker logout'
 
-
-      // Send Status Report To Email & Discord
       mail to: "Chris.Barnes.2000@me.com",
-           subject: "Job ${JOB_NAME} (${BUILD_NUMBER}) Was A ${currentBuild.currentResult}",
+           subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) Was A ${currentBuild.currentResult}",
            body: "Please go to ${BUILD_URL} and verify the build"
 
       discordSend webhookURL: "https://discord.com/api/webhooks/998320738769588224/4akFNyQItbFvUKmbGxJ-qMCyzMefF3QP4GbyNk73wry4_WfGPuDOWUlael_WN4_Yh677",
