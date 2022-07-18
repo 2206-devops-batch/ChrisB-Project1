@@ -2,7 +2,7 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS=credentials('DOCKER_AUTH_ID')
     DOCKERHUB_REPO='chrisbarnes2000/project-1'
-    TAG=${BUILD_NUMBER} // 'latest'
+    TAG="${BUILD_NUMBER}" // 'latest'
   } // environment
 
   agent any
@@ -10,7 +10,21 @@ pipeline {
   stages {
     stage('ENV CHECK'){
       steps{
+        // Login To Docker
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
+        // sh 'docker-compose down --remove-orphans -v'
+        sh 'docker kill ${docker ps -q}'
+
+        // Clean The Docker ENV
+        sh 'docker rm   ${docker ps -a -q}'
+        sh 'docker rmi  ${docker images -q}'
+        sh 'docker rmi  ${path_current_build}'
+        sh 'docker system prune -af --volumes'
+
+        // Check The ENV Is Clean
+        sh 'docker-compose ps -a'
+        sh 'docker ps -a'
       }
     }
     stage('Build'){
