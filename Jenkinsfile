@@ -47,7 +47,7 @@ pipeline {
     stage('Push'){
       steps {
         echo '\n\nPUSHING... \n'
-
+        sh "docker push ${DOCKERHUB_REPO}" //:${TAG}
       }
     }
     stage('Pull'){
