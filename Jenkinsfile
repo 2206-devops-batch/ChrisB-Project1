@@ -2,7 +2,7 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS=credentials("DOCKER_AUTH_ID")
     registry = "chrisbarnes2000"
-    repository = image = "project-1"
+    repository = "project-1"
 
     container = "flask-container"
     version = "latest"
@@ -17,14 +17,16 @@ pipeline {
 
   stages {
     stage("Verify Devops-Setup") {
-      sh """
-        docker version
-        docker info
-        docker-compose version
-        curl --version
-        jq --version
-      """
-      sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+      steps {
+        sh """
+          docker version
+          docker info
+          docker-compose version
+          curl --version
+          jq --version
+        """
+        sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+      }
     }
 
 
